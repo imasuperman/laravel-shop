@@ -67,6 +67,7 @@
     </div>
     @include('layouts._footer')
 </div>
+<script src="{{asset('js/jquery.min.js')}}"></script>
 <script src="{{asset('js/bootstrap.min.js')}}"></script>
 </body>
 </html>
