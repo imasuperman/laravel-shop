@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', '新增收货地址')
+@section('title', '修改收货地址')
 
 @section('content')
 
@@ -8,14 +8,13 @@
             <div class="card">
                 <div class="card-header">
                     <h2 class="text-center">
-                        新增收货地址
+                        修改收货地址
                     </h2>
                 </div>
                 <div class="card-body">
-                    <form class="form-horizontal" role="form" method="post" action="{{route('user_address.store')}}">
-                        <!-- 引入 csrf token 字段 -->
+                    <form class="form-horizontal" role="form" method="post" action="{{route('user_address.update',$userAddress)}}">
                     {{ csrf_field() }}
-                    <!-- 注意这里多了 @change -->
+                        @method('PUT')
                         <div class="form-group row" id="distpicker">
                             <label class="col-form-label col-sm-2 text-md-right">省市区</label>
                             <div class="col-sm-3">
@@ -51,7 +50,7 @@
                             <div class="col-sm-9">
                                 <input type="text"
                                        class="form-control{{ $errors->has('address') ? ' is-invalid' : '' }}"
-                                       name="address" value="{{old('address')}}">
+                                       name="address" value="{{old('address')?:$userAddress['address']}}">
                                 @if ($errors->has('address'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('address') }}</strong>
@@ -63,7 +62,7 @@
                             <label class="col-form-label text-md-right col-sm-2">邮编</label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control{{ $errors->has('zip') ? ' is-invalid' : '' }}"
-                                       name="zip" value="{{old('zip')}}">
+                                       name="zip" value="{{old('zip')?:$userAddress['zip']}}">
                                 @if ($errors->has('zip'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('zip') }}</strong>
@@ -74,7 +73,7 @@
                         <div class="form-group row">
                             <label class="col-form-label text-md-right col-sm-2">姓名</label>
                             <div class="col-sm-9">
-                                <input type="text" value="{{old('contact_name')}}"
+                                <input type="text" value="{{old('contact_name')?:$userAddress['contact_name']}}"
                                        class="form-control{{ $errors->has('contact_name') ? ' is-invalid' : '' }}"
                                        name="contact_name">
                                 @if ($errors->has('contact_name'))
@@ -87,7 +86,7 @@
                         <div class="form-group row">
                             <label class="col-form-label text-md-right col-sm-2">电话</label>
                             <div class="col-sm-9">
-                                <input type="text" value="{{old('contact_phone')}}"
+                                <input type="text" value="{{old('contact_phone')?:$userAddress['contact_phone']}}"
                                        class="form-control{{ $errors->has('contact_phone') ? ' is-invalid' : '' }}"
                                        name="contact_phone">
                                 @if ($errors->has('contact_phone'))
@@ -114,9 +113,9 @@
         $(function () {
             //初始化城市联动
             $("#distpicker").distpicker({
-                province: "{{old('provice')?:'请选择省'}}",
-                city: "{{old('city')?:'请选择市'}}",
-                district: "{{old('district')?:'请选择区'}}"
+                province: "{{old('province')?:$userAddress['province']}}",
+                city: "{{old('city')?:$userAddress['city']}}",
+                district: "{{old('district')?:$userAddress['district']}}"
             });
 
         })

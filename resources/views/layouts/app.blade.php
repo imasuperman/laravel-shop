@@ -5,11 +5,12 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>@yield('title','Laravel-shop') - Laravel5.8电商</title>
+    <title>@yield('title','Laravel-shop') - Laravel5.8电商 by:wubin.pro</title>
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- 样式 -->
     <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
+    @stack('css')
     <style>
         body {
             font-family: Hiragino Sans GB, "Hiragino Sans GB", Helvetica, "Microsoft YaHei", Arial, sans-serif;
@@ -69,6 +70,8 @@
 </div>
 <script src="{{asset('js/jquery.min.js')}}"></script>
 <script src="{{asset('js/bootstrap.min.js')}}"></script>
+<script src="{{asset('js/sweetalert.min.js')}}"></script>
 @stack('js')
+
 </body>
 </html>

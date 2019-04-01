@@ -11,21 +11,14 @@ $factory->define( App\Models\UserAddress::class , function ( Faker $faker ) {
         [ "广东省" , "深圳市" , "福田区" ] ,
     ];
     $address   = $faker->randomElement( $addresses );
-dd([//
-    'province'      => $address[ 0 ] ,
-    'city'          => $address[ 1 ] ,
-    'district'      => $address[ 2 ] ,
-    'address'       => sprintf( '第%d街道第%d号' , $faker->randomNumber( 2 ) , $faker->randomNumber( 3 ) ) ,
-    'zip'           => $faker->randomNumber(6) ,
-    'contact_name'  => $faker->name ,
-    'contact_phone' => $faker->phoneNumber ,
-]);
+
     return [//
             'province'      => $address[ 0 ] ,
             'city'          => $address[ 1 ] ,
             'district'      => $address[ 2 ] ,
             'address'       => sprintf( '第%d街道第%d号' , $faker->randomNumber( 2 ) , $faker->randomNumber( 3 ) ) ,
-            'zip'           => $faker->postcode ,
+            //'zip'           => $faker->postcode ,
+            'zip'           => $faker->randomNumber( 6 ) ,
             'contact_name'  => $faker->name ,
             'contact_phone' => $faker->phoneNumber ,
     ];
