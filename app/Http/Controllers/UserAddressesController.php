@@ -15,13 +15,7 @@ use Illuminate\Http\Request;
  */
 class UserAddressesController extends Controller
 {
-    /**
-     * 用户地址列表
-     *
-     * @param Request $request
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
+
     public function index( Request $request )
     {
         $addresses=$request->user()->userAddress;
@@ -43,14 +37,15 @@ class UserAddressesController extends Controller
 
     public function edit( UserAddress $userAddress )
     {
-        $this->authorize('update', $userAddress);
+        $this->authorize( 'update' , $userAddress );
+
         return view( 'user_address.edit' , compact( 'userAddress' ) );
     }
 
 
     public function update( UserAddressRequest $request , UserAddress $userAddress )
     {
-        $this->authorize('update', $userAddress);
+        $this->authorize( 'update' , $userAddress );
         $userAddress->update( $request->only( [
             'province' ,
             'city' ,
@@ -66,7 +61,7 @@ class UserAddressesController extends Controller
 
     public function destroy( UserAddress $userAddress )
     {
-        $this->authorize('update', $userAddress);
+        $this->authorize( 'delete' , $userAddress );
         $userAddress->delete();
 
         return redirect()->route( 'user_address.index' );
