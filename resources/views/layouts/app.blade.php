@@ -45,7 +45,8 @@
             width: 100%;
             /* Set the fixed height of the footer here */
             height: 60px;
-            background-color: #000
+            background-color: #000;
+
         }
         .footer .container {
             padding-right: 15px;
