@@ -15,9 +15,9 @@ class ProductsController extends Controller
     use HasResourceActions;
 
     /**
-     * Index interface.
-     *
+     * 商品列表页
      * @param Content $content
+     *
      * @return Content
      */
     public function index(Content $content)
@@ -28,20 +28,7 @@ class ProductsController extends Controller
             ->body($this->grid());
     }
 
-    /**
-     * Show interface.
-     *
-     * @param mixed $id
-     * @param Content $content
-     * @return Content
-     */
-    public function show($id, Content $content)
-    {
-        return $content
-            ->header('Detail')
-            ->description('description')
-            ->body($this->detail($id));
-    }
+
 
     /**
      * Edit interface.
@@ -53,8 +40,8 @@ class ProductsController extends Controller
     public function edit($id, Content $content)
     {
         return $content
-            ->header('Edit')
-            ->description('description')
+            ->header('商品编辑')
+            ->description('闽创联盟')
             ->body($this->form()->edit($id));
     }
 
@@ -67,14 +54,13 @@ class ProductsController extends Controller
     public function create(Content $content)
     {
         return $content
-            ->header('Create')
-            ->description('description')
+            ->header('商品添加')
+            ->description('闽创联盟')
             ->body($this->form());
     }
 
     /**
-     * Make a grid builder.
-     *
+     * 渲染商品列表页字段
      * @return Grid
      */
     protected function grid()
@@ -106,30 +92,6 @@ class ProductsController extends Controller
         return $grid;
     }
 
-    /**
-     * Make a show builder.
-     *
-     * @param mixed $id
-     * @return Show
-     */
-    protected function detail($id)
-    {
-        $show = new Show(Product::findOrFail($id));
-
-        $show->id('Id');
-        $show->title('Title');
-        $show->description('Description');
-        $show->image('Image');
-        $show->on_sale('On sale');
-        $show->rating('Rating');
-        $show->sold_count('Sold count');
-        $show->review_count('Review count');
-        $show->price('Price');
-        $show->created_at('Created at');
-        $show->updated_at('Updated at');
-
-        return $show;
-    }
 
     /**
      * Make a form builder.
@@ -140,14 +102,22 @@ class ProductsController extends Controller
     {
         $form = new Form(new Product);
 
-        $form->text('title', 'Title');
-        $form->textarea('description', 'Description');
-        $form->image('image', 'Image');
-        $form->switch('on_sale', 'On sale')->default(1);
-        $form->decimal('rating', 'Rating')->default(5.00);
-        $form->number('sold_count', 'Sold count');
-        $form->number('review_count', 'Review count');
-        $form->decimal('price', 'Price');
+        $form->text('title', '商品名称')->rules('required');
+        $form->editor('description', '商品描述')->rules('required');
+        $form->image('image', '封面图片')->rules('required|image');
+        $form->radio('on_sale', '上架')->options([1=>'上架',0=>'下架'])->default(0);
+
+        $form->hasMany('skus','sku 列表',function(Form\NestedForm $form){
+            $form->text('title', 'SKU 名称')->rules('required');
+            $form->text('description', 'SKU 描述')->rules('required');
+            $form->text('price', '单价')->rules('required|numeric|min:0.01');
+            $form->text('stock', '剩余库存')->rules('required|integer|min:0');
+        });
+        //$form->saving() 用来定义一个事件回调，当模型即将保存时会触发这个回调。我们需要在保存商品之前拿到所有 SKU 中最低的价格作为商品的价格，然后通过 $form->model()->price 存入到商品模型中。
+        //collect() 函数是 Laravel 提供的一个辅助函数，可以快速创建一个 Collection 对象。在这里我们把用户提交上来的 SKU 数据放到 Collection 中，利用 Collection 提供的 min() 方法求出所有 SKU 中最小的 price，后面的 ?: 0 则是保证当 SKU 数据为空时 price 字段被赋值 0。
+        $form->saving(function(Form $form){
+            $form->model()->price = collect($form->input('skus'))->where(Form::REMOVE_FLAG_NAME,0)->min('price') ?:0;
+        });
 
         return $form;
     }
