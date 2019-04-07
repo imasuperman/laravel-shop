@@ -39,8 +39,8 @@ class UsersController extends Controller
     public function show($id, Content $content)
     {
         return $content
-            ->header('用户管理2223')
-            ->description('用户列表22')
+            ->header('用户管理')
+            ->description('用户列表')
             ->breadcrumb(
                 ['text' => '首页', 'url' => '/admin'],
                 ['text' => '用户管理', 'url' => '/admin/users'],
