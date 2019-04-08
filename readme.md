@@ -2,5 +2,5 @@
 
 - 基于 laravel5.8
 - 电商系统
-- [个人主页](https:wubin.pro)
+- 使用过程中问题会写到[个人主页](https://wubin.pro)
 - 草根程序一枚
