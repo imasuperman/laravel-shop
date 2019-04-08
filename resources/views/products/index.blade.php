@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title', '商品列表')
 @section('content')
-    <div class="row" >
+    <div class="row">
         <div class="col-lg-10 offset-lg-1">
             <div class="card">
                 <div class="card-body">
@@ -10,8 +10,11 @@
                         <div class="form-row">
                             <div class="col-md-9">
                                 <div class="form-row">
-                                    <div class="col-auto"><input type="text" class="form-control form-control-sm" name="search" placeholder="搜索"></div>
-                                    <div class="col-auto"><button class="btn btn-primary btn-sm">搜索</button></div>
+                                    <div class="col-auto">
+                                        <input type="text" class="form-control form-control-sm" name="search" placeholder="搜索"></div>
+                                    <div class="col-auto">
+                                        <button class="btn btn-primary btn-sm">搜索</button>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -46,7 +49,7 @@
                         @endforeach
                     </div>
                     <div class="float-right">
-                        {{$products->links()}}
+                        {{$products->appends($filters)->render()}}
                     </div>
                 </div>
             </div>
@@ -55,4 +58,17 @@
 @endsection
 @push('css')
     <link rel="stylesheet" href="{{asset('css/products.css')}}">
+@endpush
+@push('js')
+    <script>
+        var filters = {!! json_encode($filters) !!};
+        $(document).ready(function () {
+            $('.search-form input[name=search]').val(filters.search);
+            $('.search-form select[name=order]').val(filters.order);
+            //监听下拉菜单事件来触发表单的提交
+            $('.search-form select[name=order]').on('change', function () {
+                $('.search-form').trigger('submit');
+            });
+        })
+    </script>
 @endpush
