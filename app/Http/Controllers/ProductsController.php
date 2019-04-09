@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
-
+use Exception;
 class ProductsController extends Controller
 {
     /**
@@ -44,5 +44,14 @@ class ProductsController extends Controller
                 'order' =>$order
             ]
         ] );
+    }
+
+    public function show(Product $product,Request $request)
+    {
+        if(!$product->on_sale){
+            throw new Exception('商品未上架');
+        }
+        //渲染模板
+        return view( 'products.show' ,compact('product'));
     }
 }
