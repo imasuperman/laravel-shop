@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('title', $product->title)
-
 @section('content')
     <div class="row">
         <div class="col-lg-10 offset-lg-1">
@@ -63,12 +62,11 @@
     </div>
 @endsection
 @push('css')
-    <link rel="stylesheet" href="{{asset('css/products-show-page.css')}}">
 @endpush
 @push('js')
     <script>
         $(document).ready(function(){
-            //$('[data-toggle="tooltip"]').tooltip({trigger:'hover'})
+            $('[data-toggle="tooltip"]').tooltip({trigger:'hover'})
             $('.sku-btn').click(function () {
                 $('.product-info .price span').text($(this).data('price'));
                 $('.product-info .stock').text('库存：' + $(this).data('stock') + '件');

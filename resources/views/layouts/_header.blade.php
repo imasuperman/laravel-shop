@@ -41,8 +41,4 @@
         </div>
     </div>
 </nav>
-<style>
-    .dropdown-menu a{
-        font-size: 14px!important;
-    }
-</style>
+
