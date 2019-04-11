@@ -69,6 +69,9 @@ class ProductsController extends Controller
 
         $grid->id('id')->sortable();
         $grid->title('商品名称');
+        $grid->image('商品图片')->display(function($value){
+            return "<img src='{$value}' style='width: 5rem'>";
+        });
         $grid->on_sale('已上架')->display(function($value){
            return $value ? '是' : '否';
         });

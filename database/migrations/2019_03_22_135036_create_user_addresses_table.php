@@ -13,7 +13,7 @@ class CreateUserAddressesTable extends Migration
      */
     public function up () {
         Schema::create( 'user_addresses' , function ( Blueprint $table ) {
-            $table->bigIncrements( 'id' );
+            $table->increments( 'id' );
             $table->unsignedInteger( 'user_id' )->index()->comment( '关联用户表id' );
             $table->string( 'province' )->comment( '省' );
             $table->string( 'city' )->comment( '市' );

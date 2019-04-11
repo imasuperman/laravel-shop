@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\Product;
 use App\Models\UserAddress;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -38,8 +39,22 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime' ,
     ];
 
+    /**
+     * 一对多关联用户地址
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function userAddress ()
     {
         return $this->hasMany( UserAddress::class );
+    }
+
+    /**
+     * 多堆多关联商品 模型
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function favoriteProducts(){
+        return $this->belongsToMany(Product::class,'user_favorite_products','user_id','product_id')
+            ->withTimestamps()
+            ->orderBy('user_favorite_products.created_at','desc');
     }
 }
