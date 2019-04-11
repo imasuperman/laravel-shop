@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\CartItem;
 use App\Models\Product;
 use App\Models\UserAddress;
 use Illuminate\Notifications\Notifiable;
@@ -17,44 +18,61 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @var array
      */
-    protected $fillable = [
-        'name' , 'email' , 'password' ,
-    ];
+    protected $fillable
+        =[
+            'name' ,
+            'email' ,
+            'password' ,
+        ];
 
     /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
      */
-    protected $hidden = [
-        'password' , 'remember_token' ,
-    ];
+    protected $hidden
+        =[
+            'password' ,
+            'remember_token' ,
+        ];
 
     /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime' ,
-    ];
+    protected $casts
+        =[
+            'email_verified_at'=>'datetime' ,
+        ];
 
     /**
      * 一对多关联用户地址
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function userAddress ()
+    public function userAddress()
     {
         return $this->hasMany( UserAddress::class );
     }
 
     /**
-     * 多堆多关联商品 模型
+     * 多对多关联商品 模型
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function favoriteProducts(){
-        return $this->belongsToMany(Product::class,'user_favorite_products','user_id','product_id')
-            ->withTimestamps()
-            ->orderBy('user_favorite_products.created_at','desc');
+    public function favoriteProducts()
+    {
+        return $this->belongsToMany( Product::class , 'user_favorite_products' , 'user_id' , 'product_id' )->withTimestamps()->orderBy( 'user_favorite_products.created_at' , 'desc' );
+    }
+
+    /**
+     * 关联购物车
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function cartItem()
+    {
+        return $this->hasMany( CartItem::class );
     }
 }
