@@ -34,7 +34,11 @@
                                 <span class="stock"></span>
                             </div>
                             <div class="buttons">
-                                <button class="btn btn-success btn-favor">❤ 收藏</button>
+                                @if($favorited)
+                                    <button class="btn btn-danger btn-disfavor">取消收藏</button>
+                                @else
+                                    <button class="btn btn-success btn-favor">❤ 收藏</button>
+                                @endif
                                 <button class="btn btn-primary btn-add-to-cart">加入购物车</button>
                             </div>
                         </div>
@@ -65,14 +69,40 @@
 @endpush
 @push('js')
     <script>
-        $(document).ready(function(){
-            $('[data-toggle="tooltip"]').tooltip({trigger:'hover'})
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip({trigger: 'hover'})
             $('.product-info .stock').text('库存' + $('.sku-btn').data('stock') + '件');
             $('.product-info .price span').text($('.sku-btn').data('price'));
             $('.sku-btn').click(function () {
                 $('.product-info .price span').text($(this).data('price'));
                 $('.product-info .stock').text('库存：' + $(this).data('stock') + '件');
             });
+            $('.btn-favor').click(function () {
+                axios.post("{{route('products.favorite',$product)}}").then(function () {
+                    swal('操作成功', '', 'success').then(function () {
+                        location.reload();
+                    });
+                }, function (error) {
+                    if (error.response && error.response.status == 401) {
+                        swal('请先登录', '', 'error');
+                    } else if (error.response && error.response.data.msg) {
+                        // 其他有 msg 字段的情况，将 msg 提示给用户
+                        swal(error.response.data.msg, '', 'error');
+                    } else {
+                        // 其他情况应该是系统挂了
+                        swal('系统错误', '', 'error');
+                    }
+                })
+            });
+            $('.btn-disfavor').click(function () {
+                axios.delete('{{route('products.disfavorite',$product)}}').then(function () {
+                    swal('操作成功', '', 'success').then(function () {
+                        location.reload();
+                    });
+                }, function (error) {
+
+                })
+            })
         });
     </script>
 @endpush

@@ -47,12 +47,48 @@ class ProductsController extends Controller
         ] );
     }
 
-    public function show(Product $product,Request $request)
+    /**
+     * 武斌 <wubin.mail@foxmail.com>
+     * 商品详情页面
+     *
+     * @param Product $product
+     * @param Request $request
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws InvalidRequestException
+     */
+    public function show( Product $product , Request $request )
     {
-        if(!$product->on_sale){
-            throw new InvalidRequestException('商品未上架');
+        if( !$product->on_sale ){
+            throw new InvalidRequestException( '商品未上架' );
         }
+        $favorited=false;
+        if( $user=$request->user() ){
+            $favorited=$user->favoriteProducts()->find( $product->id );
+        }
+
         //渲染模板
-        return view( 'products.show' ,compact('product'));
+        return view( 'products.show' , compact( 'product' , 'favorited' ) );
+    }
+
+    //收藏商品
+    public function favorite( Product $product , Request $request )
+    {
+        $user=$request->user();
+        if( $user->favoriteProducts()->find( $product->id ) ){
+            return [];
+        }
+        $user->favoriteProducts()->attach( $product );
+
+        return [];
+    }
+
+    //取消收藏
+    public function disfavorite( Product $product , Request $request )
+    {
+        $user=$request->user();
+        $user->favoriteProducts()->detach( $product );
+
+        return [];
     }
 }

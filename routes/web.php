@@ -11,11 +11,14 @@
 |
 */
 
-Auth::routes( [ 'verify' => true ] );
-Route::group( [ 'middleware' => [ 'auth' , 'verified' ] ] , function () {
-    Route::resource('user_address','UserAddressesController');
+Auth::routes( [ 'verify'=>true ] );
+Route::group( [ 'middleware'=>[ 'auth' , 'verified' ] ] , function()
+{
+    Route::resource( 'user_address' , 'UserAddressesController' );
+    Route::post( 'products/{product}/favorite' , 'ProductsController@favorite' )->name( 'products.favorite' );
+    Route::delete( 'products/{product}/favorite' , 'ProductsController@disfavorite' )->name( 'products.disfavorite' );
 } );
-Route::redirect('/', '/products')->name('root');
-Route::get('products', 'ProductsController@index')->name('products.index');
-Route::get('products/{product}', 'ProductsController@show')->name('products.show');
+Route::redirect( '/' , '/products' )->name( 'root' );
+Route::get( 'products' , 'ProductsController@index' )->name( 'products.index' );
+Route::get( 'products/{product}' , 'ProductsController@show' )->name( 'products.show' );
 
