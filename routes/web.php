@@ -25,6 +25,8 @@ Route::group( [ 'middleware'=>[ 'auth' , 'verified' ] ] , function()
     Route::post('cart', 'CartController@add')->name('cart.add');
     //购物车列表
     Route::get('cart', 'CartController@index')->name('cart.index');
+    //删除购物车
+    Route::delete('cart/{sku}', 'CartController@remove')->name('cart.remove');
 } );
 Route::redirect( '/' , '/products' )->name( 'root' );
 Route::get( 'products' , 'ProductsController@index' )->name( 'products.index' );

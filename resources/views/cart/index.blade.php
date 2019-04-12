@@ -57,3 +57,36 @@
         </div>
     </div>
 @endsection
+@push('js')
+    <script>
+        $(document).ready(function () {
+            //删除
+            $('.btn-remove').click(function () {
+                var id = $(this).closest('tr').data('id');
+                swal({
+                    title: "确认要将该商品移除？",
+                    icon: "warning",
+                    buttons: ['取消', '确定'],
+                    dangerMode: true,
+                }).then(function (willDelete) {
+                    if (!willDelete) {
+                        return;
+                    }
+                    axios.delete('/cart/' + id)
+                        .then(function () {
+                            location.reload();
+                        })
+                })
+            })
+            //删除
+            $('#select-all').change(function() {
+                //当前元素是否选中
+                var checked = $(this).prop('checked');
+                $('input[name=select][type=checkbox]:not([disabled])').each(function() {
+                    // 将其勾选状态设为与目标单选框一致
+                    $(this).prop('checked', checked);
+                });
+            })
+        })
+    </script>
+@endpush
