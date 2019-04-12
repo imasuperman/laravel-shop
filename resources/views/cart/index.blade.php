@@ -52,6 +52,31 @@
                         @endforeach
                         </tbody>
                     </table>
+                    <div>
+                        <form class="form-horizontal" role="form" id="order-form">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-3 text-md-right">选择收货地址</label>
+                                <div class="col-sm-9 col-md-7">
+                                    <select class="form-control" name="address">
+                                        @foreach($addresses as $address)
+                                            <option value="{{ $address->id }}">{{ $address->full_address }} {{ $address->contact_name }} {{ $address->contact_phone }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-3 text-md-right">备注</label>
+                                <div class="col-sm-9 col-md-7">
+                                    <textarea name="remark" class="form-control" rows="3"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="offset-sm-3 col-sm-3">
+                                    <button type="button" class="btn btn-primary btn-create-order">提交订单</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -78,14 +103,54 @@
                         })
                 })
             })
-            //删除
-            $('#select-all').change(function() {
+            //全选和反选
+            $('#select-all').change(function () {
                 //当前元素是否选中
                 var checked = $(this).prop('checked');
-                $('input[name=select][type=checkbox]:not([disabled])').each(function() {
+                $('input[name=select][type=checkbox]:not([disabled])').each(function () {
                     // 将其勾选状态设为与目标单选框一致
                     $(this).prop('checked', checked);
                 });
+            })
+            //提交订单
+            $('.btn-create-order').click(function () {
+                var data = {
+                    address_id: $('#order-form').find('select[name=address]').val(),//用户选择的地址 id
+                    items: [],
+                    remark: $('#order-form').find('textarea[name=remark]').val(),//备注
+                };
+                // 遍历 <table> 标签内所有带有 data-id 属性的 <tr> 标签，也就是每一个购物车中的商品 SKU
+                $('table tr[data-id]').each(function () {
+                    var $checkbox = $(this).find('input[name=select][type=checkbox]');
+                    if ($checkbox.prop('disabled') || !$checkbox.prop('checked')) {
+                        return;
+                    }
+                    var $input = $(this).find('input[name=amount]');
+                    if ($input.val() == 0 || isNaN($input.val())) {
+                        return;
+                    }
+                    data.items.push({
+                        sku_id: $(this).data('id'),
+                        amount: $input.val(),
+                    })
+                })
+                // console.log(data);
+                axios.post('{{route('orders.store')}}', data).then(function () {
+                    swal('订单提交成功', '', 'success');
+                }, function (error) {
+                    if (error.response.status === 422) {
+                        var html = '<div>';
+                        _.each(error.response.data.errors, function (errors) {
+                            _.each(errors, function (error) {
+                                html += error + '<br>';
+                            })
+                        })
+                        html += '</div>';
+                        swal({content: $(html)[0], icon: 'error'})
+                    } else {
+                        swal('系统错误', '', 'error');
+                    }
+                })
             })
         })
     </script>

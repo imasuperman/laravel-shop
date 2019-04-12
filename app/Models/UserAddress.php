@@ -19,11 +19,13 @@ class UserAddress extends Model
     ];
     protected $dates    = [ 'last_used_at' ];
 
+    //关联用户表
     public function user ()
     {
         return $this->belongsTo( User::class );
     }
 
+    //获取用户拼接详细地址
     public function getFullAddressAttribute ( $key )
     {
         return "{$this->province}{$this->city}{$this->district}{$this->address}";

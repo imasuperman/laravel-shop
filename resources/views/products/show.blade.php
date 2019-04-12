@@ -111,9 +111,9 @@
                 }).then(function () {
                     swal('加入购物车成功', '', 'success');
                 }, function (error) {
-                    if (error.response.status == 401) {
+                    if (error.response.status === 401) {
                         swal('请先登录', '', 'error');
-                    } else if (error.response.status == 422) {
+                    } else if (error.response.status === 422) {
                         var html = '<div>';
                         console.log(error.response.data.errors);
                         _.each(error.response.data.errors, function (errors) {
