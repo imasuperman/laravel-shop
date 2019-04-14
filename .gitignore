@@ -12,4 +12,4 @@ yarn-error.
 /.idea
 文档.md
 /public/fonts
-push.sh
+/push.sh
