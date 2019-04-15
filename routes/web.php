@@ -37,11 +37,15 @@ Route::group( [ 'middleware'=>[ 'auth' , 'verified' ] ] , function()
     Route::get('payment/{order}/alipay', 'PaymentController@payByAlipay')->name('payment.alipay');
     //支付宝支付同步通知
     Route::get('payment/alipay/return', 'PaymentController@alipayReturnUrl')->name('payment.alipay.notify_url');
+    //微信支付
+    Route::get('payment/{order}/wechat', 'PaymentController@payByWechat')->name('payment.wechat');
 } );
 Route::redirect( '/' , '/products' )->name( 'root' );
 Route::get( 'products' , 'ProductsController@index' )->name( 'products.index' );
 Route::get( 'products/{product}' , 'ProductsController@show' )->name( 'products.show' );
 //支付宝支付异步通知
-Route::post('payment/alipay/return', 'PaymentController@alipayNotifyUrl')->name('payment.alipay.return_url');
+Route::post('payment/alipay/notify', 'PaymentController@alipayNotifyUrl')->name('payment.alipay.return_url');
+//微信支付同步通知
+Route::post('payment/wechat/notify', 'PaymentController@wechatNotifyUrl')->name('payment.wechat.notify');
 
 

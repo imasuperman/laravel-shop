@@ -38,13 +38,24 @@
                                 <td class="item-amount text-right vertical-middle">￥{{ number_format($item->price * $item->amount, 2, '.', '') }}</td>
                             </tr>
                         @endforeach
-                        <tr><td colspan="4"></td></tr>
+                        <tr>
+                            <td colspan="4"></td>
+                        </tr>
                     </table>
                     <div class="order-bottom">
                         <div class="order-info">
-                            <div class="line"><div class="line-label">收货地址：</div><div class="line-value">{{ join(' ', $order->address) }}</div></div>
-                            <div class="line"><div class="line-label">订单备注：</div><div class="line-value">{{ $order->remark ?: '-' }}</div></div>
-                            <div class="line"><div class="line-label">订单编号：</div><div class="line-value">{{ $order->no }}</div></div>
+                            <div class="line">
+                                <div class="line-label">收货地址：</div>
+                                <div class="line-value">{{ join(' ', $order->address) }}</div>
+                            </div>
+                            <div class="line">
+                                <div class="line-label">订单备注：</div>
+                                <div class="line-value">{{ $order->remark ?: '-' }}</div>
+                            </div>
+                            <div class="line">
+                                <div class="line-label">订单编号：</div>
+                                <div class="line-value">{{ $order->no }}</div>
+                            </div>
                         </div>
                         <div class="order-summary text-right">
                             <div class="total-amount">
@@ -70,6 +81,7 @@
                             @if(!$order->paid_at && !$order->closed)
                                 <div class="payment-buttons">
                                     <a class="btn btn-primary btn-sm" href="{{ route('payment.alipay', ['order' => $order->id]) }}">支付宝支付</a>
+                                    <a class="btn btn-success btn-sm" id="btn-wechat" href="javascript:;">微信支付</a>
                                 </div>
                             @endif
                         </div>
@@ -79,3 +91,19 @@
         </div>
     </div>
 @endsection
+@push('js')
+    <script>
+        $(document).ready(function () {
+            $('#btn-wechat').click(function() {
+                swal({
+                    content:$('<img src="{{route ('payment.wechat',$order)}}">')[0],
+                    buttons:['关闭','已完成付款']
+                }).then(function (response) {
+                    if(response){
+                        location.reload();
+                    }
+                })
+            })
+        })
+    </script>
+@endpush
